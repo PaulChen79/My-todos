@@ -1,6 +1,7 @@
 const express = require("express")
 const exphbs = require("express-handlebars")
 const mongoose = require("mongoose")
+const Todo = require("./models/todo")
 const app = express()
 require("dotenv").config()
 
@@ -20,7 +21,11 @@ app.engine("hbs", exphbs.engine({ defaultLayout: 'main', extname: '.hbs' }))
 app.set("view engine", "hbs")
 
 app.get("/", (req, res) => {
-    res.render("index")
+    Todo.find()
+        .lean()
+        .then(todos => res.render("index", { todos }))
+        .catch(error => console.error(error))
+
 })
 
 
