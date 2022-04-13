@@ -6,4 +6,4 @@ const todoSchema = new mongoose.Schema({
     }
 })
 
-mpdule.express = mongoose.model("Todo", todoSchema)
+module.exports = mongoose.model("Todo", todoSchema)
