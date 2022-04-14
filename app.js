@@ -27,10 +27,12 @@ app.get("/", (req, res) => {
 
 })
 
+// Home page
 app.get("/todos/new", (req, res) => {
     return res.render("new")
 })
 
+// create method
 app.post("/todos", (req, res) => {
     const name = req.body.name
     return Todo.create({ name })
@@ -38,6 +40,14 @@ app.post("/todos", (req, res) => {
         .catch(error => console.error(error))
 })
 
+// read detail method
+app.get("/todos/:id", (req, res) => {
+    const id = req.params.id
+    return Todo.findById(id)
+        .lean()
+        .then((todo) => res.render("detail", { todo }))
+        .catch(error => console.error(error))
+})
 
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
