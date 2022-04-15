@@ -4,6 +4,7 @@ const methodOverride = require("method-override")
 const routes = require("./routes")
 const app = express()
 require('./config/mongoose')
+const PORT = process.env.PORT || 3000
 
 
 
@@ -14,6 +15,6 @@ app.use(methodOverride("_method"))
 
 app.use(routes)
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log("Server is listening on port 3000");
 })
