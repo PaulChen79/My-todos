@@ -1,7 +1,9 @@
 const express = require("express")
 const exphbs = require("express-handlebars")
+const methodOverride = require("method-override")
 const mongoose = require("mongoose")
 const Todo = require("./models/todo")
+const methodOverride = require("method-override")
 const app = express()
 require("dotenv").config()
 
@@ -18,6 +20,7 @@ db.once('open', () => {
 app.engine("hbs", exphbs.engine({ defaultLayout: 'main', extname: '.hbs' }))
 app.set("view engine", "hbs")
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride, "_method")
 
 app.get("/", (req, res) => {
     Todo.find()
@@ -59,7 +62,7 @@ app.get("/todos/:id/edit", (req, res) => {
         .catch(error => console.error(error))
 })
 
-app.post("/todos/:id/edit", (req, res) => {
+app.put("/todos/:id", (req, res) => {
     const id = req.params.id
     const { name, isDone } = req.body
     return Todo.findById(id)
@@ -73,7 +76,7 @@ app.post("/todos/:id/edit", (req, res) => {
 })
 
 // delete todo method
-app.post("/todos/:id/delete", (req, res) => {
+app.delete("/todos/:id", (req, res) => {
     const id = req.params.id
     return Todo.findById(id)
         .then((todo) => todo.remove())
