@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars")
 const methodOverride = require("method-override")
 const routes = require("./routes")
 const app = express()
+const usePassport = require("./config/passport")
 require('./config/mongoose')
 const PORT = process.env.PORT || 3000
 
@@ -19,6 +20,7 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"))
 
+usePassport(app)
 app.use(routes)
 
 app.listen(PORT, () => {
