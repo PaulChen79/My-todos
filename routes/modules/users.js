@@ -1,4 +1,5 @@
 const express = require('express')
+const User = require('../../models/user')
 const router = express.Router()
 
 router.get('/login', (req, res) => {
@@ -14,7 +15,17 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
-    res.render("register")
+    const { name, email, password, confirmPassword } = req.body
+    User.findOne({ email: email }).then(user => {
+            if (user) {
+                res.render("register", { name, email, password, confirmPassword })
+            } else {
+                User.create({ name: name, email: email, password: password })
+                    .then(() => res.redirect("/"))
+                    .catch(error => console.error(error))
+            }
+        })
+        .catch(error => console.error(error))
 })
 
 module.exports = router
