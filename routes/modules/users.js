@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
+const bcrypt = require('bcryptjs')
 const User = require('../../models/user')
 
 router.get('/login', (req, res) => {
@@ -35,12 +36,16 @@ router.post('/register', (req, res) => {
     User.findOne({ email: email }).then(user => {
             if (user) {
                 errors.push({ message: "This Email have been registered." })
-                res.render("register", { errors, name, email, password, confirmPassword })
-            } else {
-                User.create({ name: name, email: email, password: password })
-                    .then(() => res.redirect("/"))
-                    .catch(error => console.error(error))
+                return res.render("register", { errors, name, email, password, confirmPassword })
             }
+
+            return bcrypt
+                .genSalt(10)
+                .then(salt => bcrypt.hash(password, salt))
+                .then(hash => User
+                    .create({ name, email, password: hash })
+                    .then(() => res.redirect("/"))
+                    .catch(error => console.error(error)))
         })
         .catch(error => console.error(error))
 })
