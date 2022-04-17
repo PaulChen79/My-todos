@@ -7,7 +7,12 @@ module.exports = (app) => {
     app.use(passport.initialize())
     app.use(passport.session())
 
-    passport.use(new localStrategy({ usernameField: "email" }, (email, password, done) => {
+    passport.use(new localStrategy({
+        usernameField: 'email',
+        passwordField: 'passwd',
+        passReqToCallback: true,
+        session: false
+    }, (req, email, password, done) => {
         User.findOne({ email })
             .then(user => {
                 if (!user) {

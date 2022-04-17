@@ -18,9 +18,23 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
     const { name, email, password, confirmPassword } = req.body
+    const errors = []
+    if (!name || !email || !password || !confirmPassword) {
+        errors.push({ message: "You have to fill all the fields." })
+    }
+
+    if (password !== confirmPassword) {
+        errors.push({ message: "Confirm Password have to be equal." })
+    }
+
+    if (errors.length) {
+        return res.render('register', { errors, name, email, password, confirmPassword })
+    }
+
     User.findOne({ email: email }).then(user => {
             if (user) {
-                res.render("register", { name, email, password, confirmPassword })
+                errors.push({ message: "This Email have been registered." })
+                res.render("register", { errors, name, email, password, confirmPassword })
             } else {
                 User.create({ name: name, email: email, password: password })
                     .then(() => res.redirect("/"))
@@ -32,6 +46,7 @@ router.post('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
     req.logout()
+    req.flash("success_msg", "You have loged out.")
     res.redirect('/users/login')
 })
 
