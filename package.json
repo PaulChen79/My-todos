@@ -23,6 +23,7 @@
         "mongoose": "^6.2.10",
         "nodemon": "^2.0.15",
         "passport": "^0.5.2",
+        "passport-facebook": "^3.0.0",
         "passport-local": "^1.0.0"
     }
 }
